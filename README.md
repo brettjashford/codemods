@@ -32,4 +32,4 @@ import idx from 'idx';
 const c = idx(obj, o => o.a.b.c);
 ```
 
-_disclaimer: this is my first codemod and it's experimental, use with caution. i recommend manually verifying the transformation_
+_this is my first codemod and it's experimental. i recommend manually verifying the transformation_

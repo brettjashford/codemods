@@ -53,8 +53,25 @@ function strToObjectChain(j, pathStr) {
         throw new Error('second argument to lodash.get must be a string');
     }
     const parts = pathStr.split('.');
-    const initial = j.memberExpression(j.identifier(IDX_IDENTIFIER), j.identifier(parts[0]));
-    if (parts.length === 1) {
+    const numParts = parts.length;
+
+    let initial;
+    const firstPart = parts[0];
+    if (firstPart.substring(0, 1) === '[') {
+        // need special case so that get(obj, '[0].a') -> idx(obj, -> o[0].a)
+        const arrIndex = parseInt(firstPart.substring(1, firstPart.indexOf(']')), 10);
+        if (Number.isNaN(arrIndex)) {
+            throw new Error(`cannot parse: ${firstPart}`);
+        }
+        initial = j.memberExpression(
+            j.identifier(IDX_IDENTIFIER),
+            j.numericLiteral(parseInt(arrIndex, 10)),
+            true
+        );
+    } else {
+        initial = j.memberExpression(j.identifier(IDX_IDENTIFIER), j.identifier(firstPart));
+    }
+    if (numParts === 1) {
         return initial;
     }
     return parts.slice(1).reduce(function(acc, current) {
