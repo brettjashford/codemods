@@ -32,4 +32,7 @@ import idx from 'idx';
 const c = idx(obj, o => o.a.b.c);
 ```
 
-_disclaimer: this is my first codemod and it's experimental, use with caution. i recommend manually verifying the transformation_
+### Known Issues
+
+-   the 3rd argument to lodash.get (`get(obj, 'a.b.c', [])`) is not supported. it will remain as a 3rd argument to idx, which idx does not support. the idx babel plugin will thrown an error if configured correctly.
+-   the 2nd argument to lodash.get must be a string literal, the following will throw an error in the codemod `get(obj, 'a.b.c' + foo)`.
